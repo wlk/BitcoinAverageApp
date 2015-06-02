@@ -95,42 +95,37 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/avg24hValue"
                 android:layout_marginTop="10dp"
-                android:text="@string/avg24h" />
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/askValue"
-                android:layout_marginTop="10dp"
-                android:text="@string/ask" />
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/bidValue"
-                android:layout_marginTop="10dp"
-                android:text="@string/bid" />
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/lastValue"
-                android:layout_marginTop="10dp"
-                android:text="@string/last" />
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/timestampValue"
-                android:layout_marginTop="10dp"
-                android:text="@string/timestamp" />
+                android:layout_marginTop="10dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/volumeBTCValue"
-                android:layout_marginTop="10dp"
-                android:text="@string/volume" />
+                android:layout_marginTop="10dp" />
         </LinearLayout>
     </LinearLayout>
 </RelativeLayout>
