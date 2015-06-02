@@ -51,7 +51,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         currencySpinner.setAdapter(spinnerAdapter);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(getBaseContext());
-        int spinnerSelection = preferences.getInt("spinnerSelection", 150);
+        int spinnerSelection = preferences.getInt("spinnerSelection", 149);
 
         currencySpinner.setSelection(spinnerSelection);
 
