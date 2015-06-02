@@ -1,6 +1,10 @@
 <resources>
-    <string name="app_name">BitcoinAverageApp</string>
-
-    <string name="hello_world">Hello world!</string>
+    <string name="app_name">Bitcoin Average App</string>
     <string name="action_settings">Settings</string>
+    <string name="avg24h">Last 24h Average:</string>
+    <string name="ask">Ask:</string>
+    <string name="bid">Bid:</string>
+    <string name="last">Last:</string>
+    <string name="timestamp">Date:</string>
+    <string name="volume">Volume:</string>
 </resources>
