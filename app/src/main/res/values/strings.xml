@@ -6,6 +6,7 @@
     <string name="bid">Bid:</string>
     <string name="last">Last:</string>
     <string name="timestamp">Date:</string>
-    <string name="volume">Volume BTC:</string>
+    <string name="volume">Volume:</string>
     <string name="selectCurrencyCode">Select your currency: </string>
+    <string name="trackingId">UA-54524356-13</string>
 </resources>
