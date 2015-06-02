@@ -5,8 +5,8 @@
     <string name="ask">Ask:</string>
     <string name="bid">Bid:</string>
     <string name="last">Last:</string>
-    <string name="timestamp">Date:</string>
+    <string name="timestamp">Updated:</string>
     <string name="volume">Volume:</string>
     <string name="selectCurrencyCode">Select your currency: </string>
-    <string name="trackingId">UA-54524356-13</string>
+    <string name="googleAnalytics">UA-54524356-13</string>
 </resources>

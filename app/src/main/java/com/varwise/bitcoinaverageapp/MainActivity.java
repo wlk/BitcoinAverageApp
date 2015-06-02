@@ -17,12 +17,16 @@ import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.gms.analytics.GoogleAnalytics;
+import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.math.BigDecimal;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
+
+import hotchemi.android.rate.AppRate;
 
 
 public class MainActivity extends Activity implements AdapterView.OnItemSelectedListener {
@@ -32,6 +36,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     Spinner currencySpinner;
     TextView avg24hValue, askValue, bidValue, lastValue, volumeBTCValue, timestamp;
     SharedPreferences preferences;
+    public static GoogleAnalytics analytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +66,32 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("0457F45F2F3B38D51216287AD98A2C3D").addTestDevice("3AC2DCEE575018317C028D0C93F19AD0").addTestDevice("2D7D6AE8606296EB97A2A9B3681B90F6").build();
         adView.loadAd(adRequest);
 
+        setupGoogleAnalytics();
+
+        maybeShowAppRate();
 
         maybeShowInterstitial();
+    }
+
+    private void setupGoogleAnalytics(){
+        analytics = GoogleAnalytics.getInstance(this);
+        analytics.setLocalDispatchPeriod(1800);
+        t = analytics.newTracker(getResources().getString(R.string.googleAnalytics));
+        t.enableExceptionReporting(true);
+        t.enableAdvertisingIdCollection(true);
+        t.enableAutoActivityTracking(true);
+    }
+
+    private void maybeShowAppRate(){
+        AppRate.with(this)
+                .setInstallDays(1)
+                .setLaunchTimes(2)
+                .setRemindInterval(1)
+                .setShowNeutralButton(true)
+                .setDebug(false)
+                .monitor();
+
+        AppRate.showRateDialogIfMeetsConditions(this);
     }
 
     private void maybeShowInterstitial(){
@@ -106,6 +135,8 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        t.send(new HitBuilders.EventBuilder().setCategory("MainActivity").setAction("click").setLabel("onItemSelected").build());
+
         preferences.edit().putInt("spinnerSelection", currencySpinner.getSelectedItemPosition()).apply();
 
         GetTickerTask gtt = new GetTickerTask(this);
@@ -118,6 +149,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     }
 
     public void onTickerUpdated(Ticker ticker) {
+
         avg24hValue.setText(currencyFormat(ticker.avg24h) + " "+  currencySpinner.getSelectedItem().toString());
         askValue.setText(currencyFormat(ticker.ask) + " "+  currencySpinner.getSelectedItem().toString());
         bidValue.setText(currencyFormat(ticker.bid) + " "+  currencySpinner.getSelectedItem().toString());
