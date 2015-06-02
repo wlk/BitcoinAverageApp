@@ -22,7 +22,6 @@ import com.google.android.gms.analytics.HitBuilders;
 import com.google.android.gms.analytics.Tracker;
 
 import java.math.BigDecimal;
-import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -37,6 +36,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     TextView avg24hValue, askValue, bidValue, lastValue, volumeBTCValue, timestamp;
     SharedPreferences preferences;
     public static GoogleAnalytics analytics;
+    private AdView adView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,14 +55,14 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
 
         currencySpinner.setSelection(spinnerSelection);
 
-        avg24hValue = (TextView)findViewById(R.id.avg24hValue);
-        askValue = (TextView)findViewById(R.id.askValue);
-        bidValue = (TextView)findViewById(R.id.bidValue);
-        lastValue = (TextView)findViewById(R.id.lastValue);
-        volumeBTCValue = (TextView)findViewById(R.id.volumeBTCValue);
-        timestamp = (TextView)findViewById(R.id.timestampValue);
+        avg24hValue = (TextView) findViewById(R.id.avg24hValue);
+        askValue = (TextView) findViewById(R.id.askValue);
+        bidValue = (TextView) findViewById(R.id.bidValue);
+        lastValue = (TextView) findViewById(R.id.lastValue);
+        volumeBTCValue = (TextView) findViewById(R.id.volumeBTCValue);
+        timestamp = (TextView) findViewById(R.id.timestampValue);
 
-        AdView adView = (AdView)findViewById(R.id.adViewMainScreen);
+        adView = (AdView) findViewById(R.id.adViewMainScreen);
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("0457F45F2F3B38D51216287AD98A2C3D").addTestDevice("3AC2DCEE575018317C028D0C93F19AD0").addTestDevice("2D7D6AE8606296EB97A2A9B3681B90F6").build();
         adView.loadAd(adRequest);
 
@@ -73,7 +73,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         maybeShowInterstitial();
     }
 
-    private void setupGoogleAnalytics(){
+    private void setupGoogleAnalytics() {
         analytics = GoogleAnalytics.getInstance(this);
         analytics.setLocalDispatchPeriod(1800);
         t = analytics.newTracker(getResources().getString(R.string.googleAnalytics));
@@ -82,7 +82,7 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         t.enableAutoActivityTracking(true);
     }
 
-    private void maybeShowAppRate(){
+    private void maybeShowAppRate() {
         AppRate.with(this)
                 .setInstallDays(1)
                 .setLaunchTimes(2)
@@ -94,13 +94,13 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         AppRate.showRateDialogIfMeetsConditions(this);
     }
 
-    private void maybeShowInterstitial(){
+    private void maybeShowInterstitial() {
         AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("0457F45F2F3B38D51216287AD98A2C3D").addTestDevice("3AC2DCEE575018317C028D0C93F19AD0").addTestDevice("2D7D6AE8606296EB97A2A9B3681B90F6").build();
 
         int appRuns = preferences.getInt("appRuns", 0);
         preferences.edit().putInt("appRuns", ++appRuns).apply();
 
-        if(appRuns > 10 && appRuns % 10 == 0) {
+        if (appRuns > 10 && appRuns % 10 == 0) {
             interstitial = new InterstitialAd(this);
             interstitial.setAdUnitId("ca-app-pub-5829945009169600/2217384767");
             interstitial.setAdListener(new AdListener() {
@@ -126,7 +126,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_about) {
+            AboutDialog about = new AboutDialog(this);
+            about.setTitle("About Bitcoin Average App");
+            about.show();
             return true;
         }
 
@@ -150,19 +153,37 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
 
     public void onTickerUpdated(Ticker ticker) {
 
-        avg24hValue.setText(currencyFormat(ticker.avg24h) + " "+  currencySpinner.getSelectedItem().toString());
-        askValue.setText(currencyFormat(ticker.ask) + " "+  currencySpinner.getSelectedItem().toString());
-        bidValue.setText(currencyFormat(ticker.bid) + " "+  currencySpinner.getSelectedItem().toString());
-        lastValue.setText(currencyFormat(ticker.last) + " "+  currencySpinner.getSelectedItem().toString());
+        avg24hValue.setText(currencyFormat(ticker.avg24h) + " " + currencySpinner.getSelectedItem().toString());
+        askValue.setText(currencyFormat(ticker.ask) + " " + currencySpinner.getSelectedItem().toString());
+        bidValue.setText(currencyFormat(ticker.bid) + " " + currencySpinner.getSelectedItem().toString());
+        lastValue.setText(currencyFormat(ticker.last) + " " + currencySpinner.getSelectedItem().toString());
         volumeBTCValue.setText(currencyFormat(ticker.volume_btc) + " BTC");
         timestamp.setText(ticker.timestamp.split(" -")[0]);
 
-        if(ticker.ask.equals(BigDecimal.ZERO)){
+        if (ticker.ask.equals(BigDecimal.ZERO)) {
             Toast.makeText(MainActivity.this, "There was a problem connecting to Bitcoin Average. Please try again later.", Toast.LENGTH_LONG).show();
         }
     }
 
     public static String currencyFormat(BigDecimal n) {
         return n.setScale(2, BigDecimal.ROUND_DOWN).toString();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        adView.resume();
+    }
+
+    @Override
+    public void onPause() {
+        adView.pause();
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        adView.destroy();
+        super.onDestroy();
     }
 }

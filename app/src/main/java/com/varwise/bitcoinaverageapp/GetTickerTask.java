@@ -19,7 +19,7 @@ public class GetTickerTask extends AsyncTask<String, Void, Ticker> {
     private static final String API_BASE = "https://api.bitcoinaverage.com/ticker/global/";
     private MainActivity mainActivity;
 
-    public GetTickerTask(MainActivity mainActivity){
+    public GetTickerTask(MainActivity mainActivity) {
         this.mainActivity = mainActivity;
     }
 
