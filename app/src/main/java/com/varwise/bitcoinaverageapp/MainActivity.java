@@ -37,12 +37,10 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     SharedPreferences preferences;
     public static GoogleAnalytics analytics;
     private AdView adView;
+    private boolean adsEnabled = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        //  banner
-        // interstitial
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         currencySpinner = (Spinner) findViewById(R.id.currencySpinner);
@@ -62,9 +60,11 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
         volumeBTCValue = (TextView) findViewById(R.id.volumeBTCValue);
         timestamp = (TextView) findViewById(R.id.timestampValue);
 
-        adView = (AdView) findViewById(R.id.adViewMainScreen);
-        AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("0457F45F2F3B38D51216287AD98A2C3D").addTestDevice("3AC2DCEE575018317C028D0C93F19AD0").addTestDevice("2D7D6AE8606296EB97A2A9B3681B90F6").build();
-        adView.loadAd(adRequest);
+        if (adsEnabled) {
+            adView = (AdView) findViewById(R.id.adViewMainScreen);
+            AdRequest adRequest = new AdRequest.Builder().addTestDevice(AdRequest.DEVICE_ID_EMULATOR).addTestDevice("0457F45F2F3B38D51216287AD98A2C3D").addTestDevice("3AC2DCEE575018317C028D0C93F19AD0").addTestDevice("2D7D6AE8606296EB97A2A9B3681B90F6").build();
+            adView.loadAd(adRequest);
+        }
 
         setupGoogleAnalytics();
 
@@ -116,7 +116,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
@@ -152,7 +151,6 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     }
 
     public void onTickerUpdated(Ticker ticker) {
-
         avg24hValue.setText(currencyFormat(ticker.avg24h) + " " + currencySpinner.getSelectedItem().toString());
         askValue.setText(currencyFormat(ticker.ask) + " " + currencySpinner.getSelectedItem().toString());
         bidValue.setText(currencyFormat(ticker.bid) + " " + currencySpinner.getSelectedItem().toString());
@@ -172,18 +170,24 @@ public class MainActivity extends Activity implements AdapterView.OnItemSelected
     @Override
     public void onResume() {
         super.onResume();
-        adView.resume();
+        if (adsEnabled) {
+            adView.resume();
+        }
     }
 
     @Override
     public void onPause() {
-        adView.pause();
+        if (adsEnabled) {
+            adView.pause();
+        }
         super.onPause();
     }
 
     @Override
     public void onDestroy() {
-        adView.destroy();
+        if (adsEnabled) {
+            adView.destroy();
+        }
         super.onDestroy();
     }
 }
