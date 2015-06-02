@@ -7,4 +7,5 @@
     <string name="last">Last:</string>
     <string name="timestamp">Date:</string>
     <string name="volume">Volume:</string>
+    <string name="selectCurrencyCode">Select your currency</string>
 </resources>
